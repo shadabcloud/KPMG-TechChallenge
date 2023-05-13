@@ -6,6 +6,7 @@ param name string
 param location string
 param hostingplanName string
 param storageaccountname string
+param roledefinitionid string = 'acdd72a7-3385-48ef-bd42-f606fba81ae7' // RBAC Reader
 
 // Fetching App Service Plan.
 
@@ -30,6 +31,9 @@ resource function 'Microsoft.Web/sites@2022-03-01' = {
   name: name
   location: location
   kind: 'functionapp'
+  identity: {
+    type: 'SystemAssigned'
+  }
   properties: {
     serverFarmId: hostingplan.id
     clientAffinityEnabled: true
@@ -56,5 +60,19 @@ resource function 'Microsoft.Web/sites@2022-03-01' = {
         }
       ]
     }
+  }
+}
+
+resource roledefinition 'Microsoft.Authorization/roleDefinitions@2022-04-01' existing = {
+  name: roledefinitionid
+  scope: subscription()
+}
+
+resource roleassignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  name: guid(subscription().id, roledefinitionid)
+  properties: {
+    principalId: function.identity.principalId
+    roleDefinitionId: roledefinition.id
+    principalType: 'ServicePrincipal'
   }
 }
