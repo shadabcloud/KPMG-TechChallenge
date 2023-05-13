@@ -1,0 +1,31 @@
+trigger: none
+
+resources:
+ repositories:
+   - repository: Challenge
+     type: git
+     name: KPMG-TechChallenge
+
+variables:
+  - group: Sample-Vars
+
+pool:
+ name: Azure Pipelines
+ 
+stages:
+  - stage: Deploy_Azure_Function
+    displayName: "Deploy_Azure_Function"
+    condition: true
+    jobs:
+      - job: Deploy_Azure_Function
+        displayName: Deploy_Azure_Function
+        steps:
+          - task: AzureCLI@2
+            inputs:
+              azureSubscription: 'SPN'
+              scriptType: 'bash'
+              scriptLocation: 'inlineScript'
+              inlineScript: |
+                az deployment sub create --name functiondeployment  \
+                --location eastus  \
+                --template-file Challenge2/InfraDeployment/create.azurefunction.bicep

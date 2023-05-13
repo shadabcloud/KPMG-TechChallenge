@@ -20,7 +20,7 @@ resource RGEUS 'Microsoft.Resources/resourceGroups@2021-04-01' = {
 
 // Creating App Service Plan
 
-module EUSAppServicePlan '../../BicepModules/azureappserviceplan.bicep' = {
+module EUSAppServicePlan 'Bicepmodule/azureappserviceplan.bicep' = {
   name: 'eushostingplandeploy'
   scope: resourceGroup(subscriptionID, rgeusname)
   dependsOn: [
@@ -34,7 +34,7 @@ module EUSAppServicePlan '../../BicepModules/azureappserviceplan.bicep' = {
 
 // Creating Azure Function with PowerShell Core runtime
 
-module FunctionApp '../../BicepModules/azurefunctionapp.bicep' = {
+module FunctionApp 'Bicepmodule/azurefunctionapp.bicep' = {
   name: 'deployfunctionapp'
   scope: resourceGroup(subscriptionID, rgeusname) 
   dependsOn: [
