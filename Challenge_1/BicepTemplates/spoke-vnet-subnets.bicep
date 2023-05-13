@@ -16,6 +16,20 @@ resource AppServiceNSG 'Microsoft.Network/networkSecurityGroups@2022-11-01' = {
   properties: {
     securityRules: [
       {
+        name: 'Deny_All_In'
+        properties: {
+          priority: 2000
+          access: 'Deny'
+          direction: 'Inbound'
+          sourceAddressPrefix: '*'
+          sourcePortRange: '*'
+          protocol: '*'
+          destinationAddressPrefix: appservicesubnetprefix
+          destinationPortRange: '*'
+          description: 'Deny all traffic to appservice subnet'
+        }
+      }
+      {
         name: 'AppserviceSubnet_To_PLESubnet_Out'
         properties: {
           priority: 1000
@@ -32,6 +46,20 @@ resource AppServiceNSG 'Microsoft.Network/networkSecurityGroups@2022-11-01' = {
           description: 'Allow_AppserviceSubnet to PLE Subnet for SQL and Redis connections'
         }
       }
+      {
+        name: 'Deny_All_Out'
+        properties: {
+          priority: 2000
+          access: 'Deny'
+          direction: 'Outbound'
+          sourceAddressPrefix: appservicesubnetprefix
+          sourcePortRange: '*'
+          protocol: '*'
+          destinationAddressPrefix: '*'
+          destinationPortRange: '*'
+          description: 'Deny all traffic from appservice subnet'
+        }
+      }
     ]
   }
 }
@@ -41,6 +69,20 @@ resource PLESubnetNSG 'Microsoft.Network/networkSecurityGroups@2022-11-01' = {
   location: location
   properties: {
     securityRules: [
+      {
+        name: 'Deny_All_In'
+        properties: {
+          priority: 2000
+          access: 'Deny'
+          direction: 'Inbound'
+          sourceAddressPrefix: '*'
+          sourcePortRange: '*'
+          protocol: '*'
+          destinationAddressPrefix: plesubnetprefix
+          destinationPortRange: '*'
+          description: 'Deny all traffic to ple subnet'
+        }
+      }
       {
         name: 'AppserviceSubnet_To_PLESubnet_In'
         properties: {
@@ -56,6 +98,20 @@ resource PLESubnetNSG 'Microsoft.Network/networkSecurityGroups@2022-11-01' = {
             '6380'
           ]
           description: 'Allow_AppserviceSubnet to PLE Subnet for SQL and Redis connections'
+        }
+      }
+      {
+        name: 'Deny_All_Out'
+        properties: {
+          priority: 2000
+          access: 'Deny'
+          direction: 'Outbound'
+          sourceAddressPrefix: plesubnetprefix
+          sourcePortRange: '*'
+          protocol: '*'
+          destinationAddressPrefix: '*'
+          destinationPortRange: '*'
+          description: 'Deny all traffic from ple subnet'
         }
       }
     ]
