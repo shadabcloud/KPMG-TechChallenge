@@ -3,6 +3,7 @@ param location string
 param capacity int
 param family string
 param SkuName string
+param publicaccess string
 
 resource rediscache 'Microsoft.Cache/redis@2022-06-01' = {
   name: rediscachename
@@ -15,7 +16,7 @@ resource rediscache 'Microsoft.Cache/redis@2022-06-01' = {
     }
     enableNonSslPort: false
     minimumTlsVersion: '1.2'
-    publicNetworkAccess: 'Disabled'
+    publicNetworkAccess: publicaccess
     redisVersion: '6.0'
   }
 }
