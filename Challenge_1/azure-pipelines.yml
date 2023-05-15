@@ -26,7 +26,7 @@ stages:
               scriptType: 'bash'
               scriptLocation: 'inlineScript'
               inlineScript: |
-                az deployment sub create --name functiondeployment  \
+                az deployment group create --name functiondeployment  \
                 --resource-group vnetrg \
                 --location westeurope  \
                 --template-file Challenge1/main/spoke-vnet-subnets.main.bicep
