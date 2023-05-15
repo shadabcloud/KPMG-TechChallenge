@@ -1,0 +1,49 @@
+trigger: none
+
+resources:
+ repositories:
+   - repository: Challenge
+     type: git
+     name: KPMG-TechChallenge
+
+variables:
+  - group: Sample-Vars
+
+pool:
+ name: Azure Pipelines
+ 
+stages:
+  - stage: Deploy_Network
+    displayName: "Deploy_Network"
+    condition: true
+    jobs:
+      - job: Deploy_Network
+        displayName: Deploy_Network
+        steps:
+          - task: AzureCLI@2
+            inputs:
+              azureSubscription: 'SPN'
+              scriptType: 'bash'
+              scriptLocation: 'inlineScript'
+              inlineScript: |
+                az deployment sub create --name functiondeployment  \
+                --resource-group vnetrg \
+                --location westeurope  \
+                --template-file Challenge1/main/spoke-vnet-subnets.main.bicep
+
+  - stage: Deploy_Application_Resources
+    displayName: "Deploy_Application_Resources"
+    condition: true
+    jobs:
+      - job: Deploy_Application_Resources
+        displayName: Deploy_Application_Resources
+        steps:
+          - task: AzureCLI@2
+            inputs:
+              azureSubscription: 'SPN'
+              scriptType: 'bash'
+              scriptLocation: 'inlineScript'
+              inlineScript: |
+                az deployment sub create --name functiondeployment  \
+                --location westeurope  \
+                --template-file Challenge1/main/3-Tier-App.main.bicep
