@@ -83,3 +83,5 @@ resource webcontainer 'Microsoft.Storage/storageAccounts/blobServices/containers
     denyEncryptionScopeOverride: false
   }
 }
+
+output storageAccountID string = storageAccount.id

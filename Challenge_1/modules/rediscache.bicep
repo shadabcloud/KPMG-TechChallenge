@@ -22,3 +22,4 @@ resource rediscache 'Microsoft.Cache/redis@2022-06-01' = {
 }
 
 output rediscacheaccesskey string = rediscache.properties.accessKeys.primaryKey
+output redisCacheID string = rediscache.id

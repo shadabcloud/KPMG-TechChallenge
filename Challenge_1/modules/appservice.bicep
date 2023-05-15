@@ -6,13 +6,10 @@ param SkuTier string
 param webappname string
 param appservicesubnetId string
 param rediscachename string
+param resdiscacheaccesskey string
+param staticwebappendpoint string
 
-var resdiscacheaccesskey = rediscache.listKeys().primaryKey
 var redisconnectionstring = '${rediscachename}.redis.cache.windows.net:6380,password=${resdiscacheaccesskey},ssl=True,abortConnet=False'
-
-resource rediscache 'Microsoft.Cache/redis@2022-06-01' existing = {
-  name: rediscachename
-}
 
 resource appServicePlan 'Microsoft.Web/serverfarms@2022-09-01' = {
   name: appServicePlanName
@@ -55,6 +52,11 @@ resource webapp 'Microsoft.Web/sites@2022-09-01' = {
       javaContainerVersion: 'SE'
       javaVersion: '11'
       healthCheckPath: '/'
+      cors: {
+        allowedOrigins: [
+          staticwebappendpoint
+        ]
+      }
       appSettings: [
         {
           name: 'RedisConnString'
@@ -73,3 +75,5 @@ resource vnetinjection 'Microsoft.Web/sites/networkconfig@2022-09-01' = {
     swiftSupported: true
   }
 }
+
+output AppServiceID string = webapp.id

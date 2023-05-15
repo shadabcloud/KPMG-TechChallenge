@@ -21,3 +21,5 @@ resource sqlServer 'Microsoft.Sql/servers@2022-08-01-preview' = {
     version: '12.0'
   }
 }
+
+output sqlServerId string = sqlServer.id
